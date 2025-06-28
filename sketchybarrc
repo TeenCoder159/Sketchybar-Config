@@ -12,7 +12,7 @@ PLUGIN_DIR="$CONFIG_DIR/plugins"
 # If you are looking for other colors, see the color picker:
 # https://felixkratz.github.io/SketchyBar/config/tricks#color-picker
 
-sketchybar --bar show_in_fullscreen=on topmost=on sticky=on position=top height=32 blur_radius=50 color=0xff00071a corner_radius=10
+sketchybar --bar show_in_fullscreen=on topmost=on sticky=on position=top height=32 color=0xff00071a
 
 ##### Changing Defaults #####
 # We now change some default values, which are applied to all further items.
