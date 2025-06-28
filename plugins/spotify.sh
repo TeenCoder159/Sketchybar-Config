@@ -1,96 +1,97 @@
-#!/usr/bin/env sh
+#!/bin/sh
 
-next ()
-{
+next() {
   osascript -e 'tell application "Spotify" to play next track'
 }
 
-back () 
-{
+back() {
   osascript -e 'tell application "Spotify" to play previous track'
 }
 
-play () 
-{
+play() {
   osascript -e 'tell application "Spotify" to playpause'
 }
 
-repeat () 
-{
+repeat() {
   REPEAT=$(osascript -e 'tell application "Spotify" to get repeating')
   if [ "$REPEAT" = "false" ]; then
     sketchybar -m --set spotify.repeat icon.highlight=on
     osascript -e 'tell application "Spotify" to set repeating to true'
-  else 
+  else
     sketchybar -m --set spotify.repeat icon.highlight=off
     osascript -e 'tell application "Spotify" to set repeating to false'
   fi
 }
 
-shuffle () 
-{
+shuffle() {
   SHUFFLE=$(osascript -e 'tell application "Spotify" to get shuffling')
   if [ "$SHUFFLE" = "false" ]; then
     sketchybar -m --set spotify.shuffle icon.highlight=on
     osascript -e 'tell application "Spotify" to set shuffling to true'
-  else 
+  else
     sketchybar -m --set spotify.shuffle icon.highlight=off
     osascript -e 'tell application "Spotify" to set shuffling to false'
   fi
 }
 
-update ()
-{
-  PLAYING=1
-  if [ "$(echo "$INFO" | jq -r '.["Player State"]')" = "Playing" ]; then
-    PLAYING=0
-    TRACK="$(echo "$INFO" | jq -r .Name | cut -c1-20)"
-    ARTIST="$(echo "$INFO" | jq -r .Artist | cut -c1-20)"
-    ALBUM="$(echo "$INFO" | jq -r .Album | cut -c1-20)"
-    SHUFFLE=$(osascript -e 'tell application "Spotify" to get shuffling')
-    REPEAT=$(osascript -e 'tell application "Spotify" to get repeating')
+update() {
+  # Check if Spotify is running
+  SPOTIFY_RUNNING=$(osascript -e 'application "Spotify" is running')
+
+  if [ "$SPOTIFY_RUNNING" = "false" ]; then
+    # Hide widget if Spotify is closed
+    sketchybar -m --set spotify.name drawing=off popup.drawing=off
+    exit 0
+  fi
+
+  # Default values
+  TRACK="No Track"
+  ARTIST="Umang"
+  ALBUM=""
+  SHUFFLE=$(osascript -e 'tell application "Spotify" to get shuffling')
+  REPEAT=$(osascript -e 'tell application "Spotify" to get repeating')
+  STATE=$(osascript -e 'tell application "Spotify" to player state')
+
+  if [ "$STATE" = "playing" ]; then
+    TRACK=$(osascript -e 'tell application "Spotify" to name of current track' | cut -c1-20)
+    ARTIST=$(osascript -e 'tell application "Spotify" to artist of current track' | cut -c1-20)
+    ALBUM=$(osascript -e 'tell application "Spotify" to album of current track' | cut -c1-20)
   fi
 
   args=()
-  if [ $PLAYING -eq 0 ]; then
-    if [ "$ARTIST" == "" ]; then
-      args+=(--set spotify.name label="$TRACK  􀉮  $ALBUM" drawing=on)
-    else
-      args+=(--set spotify.name label="$TRACK  􀉮  $ARTIST" drawing=on)
-    fi
-    args+=(--set spotify.play icon=􀊆 \
-           --set spotify.shuffle icon.highlight=$SHUFFLE \
-           --set spotify.repeat icon.highlight=$REPEAT)
+
+  # Always show the widget if Spotify is running
+  if [ "$ARTIST" = "" ]; then
+    args+=(--set spotify.name label="${TRACK}  􀉮  ${ALBUM}" drawing=on)
   else
-    args+=(--set spotify.name drawing=off \
-           --set spotify.name popup.drawing=off \
-           --set spotify.play icon=􀊄)
+    args+=(--set spotify.name label="${TRACK}  􀉮  ${ARTIST}" drawing=on)
   fi
+
+  if [ "$STATE" = "playing" ]; then
+    args+=(--set spotify.play icon=􀊆)
+  else
+    args+=(--set spotify.play icon=􀊄)
+  fi
+
+  args+=(--set spotify.shuffle icon.highlight="$SHUFFLE")
+  args+=(--set spotify.repeat icon.highlight="$REPEAT")
+
   sketchybar -m "${args[@]}"
 }
 
-mouse_clicked () {
+mouse_clicked() {
   case "$NAME" in
-    "spotify.next") next
-    ;;
-    "spotify.back") back
-    ;;
-    "spotify.play") play
-    ;;
-    "spotify.shuffle") shuffle
-    ;;
-    "spotify.repeat") repeat
-    ;;
-    *) exit
-    ;;
+    "spotify.next") next ;;
+    "spotify.back") back ;;
+    "spotify.play") play ;;
+    "spotify.shuffle") shuffle ;;
+    "spotify.repeat") repeat ;;
+    *) exit ;;
   esac
 }
 
 case "$SENDER" in
-  "mouse.clicked") mouse_clicked
-  ;;
-  "forced") exit
-  ;;
-  *) update
-  ;;
+  "mouse.clicked") mouse_clicked ;;
+  "forced") exit ;;
+  *) update ;;
 esac
