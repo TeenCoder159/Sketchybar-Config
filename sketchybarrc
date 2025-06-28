@@ -12,7 +12,7 @@ PLUGIN_DIR="$CONFIG_DIR/plugins"
 # If you are looking for other colors, see the color picker:
 # https://felixkratz.github.io/SketchyBar/config/tricks#color-picker
 
-sketchybar --bar position=top height=33 blur_radius=50 color=0x504A0404 corner_radius=20
+sketchybar --bar show_in_fullscreen=on topmost=on sticky=on position=top height=32 blur_radius=50 color=0xff00071a corner_radius=10
 
 ##### Changing Defaults #####
 # We now change some default values, which are applied to all further items.
@@ -24,8 +24,11 @@ default=(
   padding_right=5
   icon.font="JetBrainsMono Nerd Font:Bold:17.0"
   label.font="JetBrainsMono Nerd Font:Bold:14.0"
-  icon.color=0xffffffff
-  label.color=0xffffffff
+  background.color=0x20ffffff
+  background.corner_radius=5
+  background.height=25
+  icon.color=0xff9b9b9b
+  label.color=0xff9b9b9b
   icon.padding_left=4
   icon.padding_right=4
   label.padding_left=4
@@ -39,7 +42,7 @@ sketchybar --default "${default[@]}"
 # to indicate active and available mission control spaces.
 
 sketchybar --add item applelogo left \
-           --set applelogo label= \
+           --set applelogo label= background.color=0x00000000 \
 
 
 SPACE_ICONS=("1" "2" "3" "4" "5" "6" "7" "8" "9" "10")
@@ -51,9 +54,6 @@ do
     icon="${SPACE_ICONS[i]}"
     icon.padding_left=7
     icon.padding_right=7
-    background.color=0x40ffffff
-    background.corner_radius=5
-    background.height=25
     label.drawing=off
     script="$PLUGIN_DIR/space.sh"
     click_script="yabai -m space --focus $sid"
@@ -66,9 +66,9 @@ done
 # only the properties deviating from the current defaults need to be set
 
 sketchybar --add item chevron left \
-           --set chevron icon= label.drawing=off \
+           --set chevron icon= label.drawing=off background.color=0x00000000 \
            --add item front_app left \
-           --set front_app icon.drawing=off script="$PLUGIN_DIR/front_app.sh" \
+           --set front_app icon.drawing=off background.color=0x00000000 script="$PLUGIN_DIR/front_app.sh" \
            --subscribe front_app front_app_switched
 
 ##### Adding Right Items #####
@@ -83,13 +83,66 @@ sketchybar --add item chevron left \
 # https://felixkratz.github.io/SketchyBar/config/events
 
 sketchybar --add item clock right \
-           --set clock border_color=0x99000000 update_freq=10 icon=  script="$PLUGIN_DIR/clock.sh" \
+           --set clock update_freq=1 icon=  script="$PLUGIN_DIR/clock.sh" \
            --add item volume right \
            --set volume script="$PLUGIN_DIR/volume.sh" \
            --subscribe volume volume_change \
            --add item battery right \
            --set battery update_freq=120 script="$PLUGIN_DIR/battery.sh" \
            --subscribe battery system_woke power_source_change
+
+SPOTIFY_EVENT="com.spotify.client.PlaybackStateChanged"
+POPUP_SCRIPT="sketchybar -m --set \$NAME popup.drawing=toggle"
+
+sketchybar --add       event           spotify_change $SPOTIFY_EVENT      \
+           --add       item            spotify.name right                \
+           --set       spotify.name    click_script="$POPUP_SCRIPT"       \
+                                       popup.horizontal=on                \
+                                       popup.align=center                 \
+                                       icon.drawing=off                   \
+                                                                          \
+           --add       item            spotify.back popup.spotify.name    \
+           --set       spotify.back    icon=􀊎                             \
+                                       icon.padding_left=5                \
+                                       icon.padding_right=5               \
+                                       script="$PLUGIN_DIR/spotify.sh"    \
+                                       label.drawing=on                  \
+           --subscribe spotify.back    mouse.clicked                      \
+                                                                          \
+           --add       item            spotify.play popup.spotify.name    \
+           --set       spotify.play    icon=􀊔                             \
+                                       icon.padding_left=5                \
+                                       icon.padding_right=5               \
+                                       updates=on                         \
+                                       label.drawing=on                  \
+                                       script="$PLUGIN_DIR/spotify.sh"    \
+           --subscribe spotify.play    mouse.clicked spotify_change       \
+                                                                          \
+           --add       item            spotify.next popup.spotify.name    \
+           --set       spotify.next    icon=􀊐                             \
+                                       icon.padding_left=5                \
+                                       icon.padding_right=10              \
+                                       label.drawing=on                  \
+                                       script="$PLUGIN_DIR/spotify.sh"    \
+           --subscribe spotify.next    mouse.clicked                      \
+                                                                          \
+           --add       item            spotify.shuffle popup.spotify.name \
+           --set       spotify.shuffle icon=􀊝                             \
+                                       icon.highlight_color=0xff1DB954    \
+                                       icon.padding_left=5                \
+                                       icon.padding_right=5               \
+                                       label.drawing=on                  \
+                                       script="$PLUGIN_DIR/spotify.sh"    \
+           --subscribe spotify.shuffle mouse.clicked                      \
+                                                                          \
+           --add       item            spotify.repeat popup.spotify.name  \
+           --set       spotify.repeat  icon=􀊞                             \
+                                       icon.highlight_color=0xff1DB954    \
+                                       icon.padding_left=5                \
+                                       icon.padding_right=5               \
+                                       label.drawing=on                  \
+                                       script="$PLUGIN_DIR/spotify.sh"    \
+           --subscribe spotify.repeat  mouse.clicked
 
 ##### Force all scripts to run the first time (never do this in a script) #####
 sketchybar --update
