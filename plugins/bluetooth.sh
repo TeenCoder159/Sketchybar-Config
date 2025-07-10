@@ -17,6 +17,7 @@ mouse_clicked() {
   else
     blueutil --connect 2C:BE:EB:0B:1E:0F 
   fi
+
 }
 
 
