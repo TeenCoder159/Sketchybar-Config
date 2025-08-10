@@ -1,34 +1,19 @@
-# This is a demo config to showcase some of the most important commands.
-# It is meant to be changed and configured, as it is intentionally kept sparse.
-# For a (much) more advanced configuration example see my dotfiles:
-# https://github.com/FelixKratz/dotfiles
-
 PLUGIN_DIR="$CONFIG_DIR/plugins"
 
 ##### Bar Appearance #####
-# Configuring the general appearance of the bar.
-# These are only some of the options available. For all options see:
-# https://felixkratz.github.io/SketchyBar/config/bar
-# If you are looking for other colors, see the color picker:
-# https://felixkratz.github.io/SketchyBar/config/tricks#color-picker
-
-sketchybar --bar show_in_fullscreen=on topmost=on sticky=on position=top height=32 color=0x0000071a
+sketchybar --bar show_in_fullscreen=on topmost=on sticky=on position=top height=32 color=0x00002828
 
 ##### Changing Defaults #####
-# We now change some default values, which are applied to all further items.
-# For a full list of all available item properties see:
-# https://felixkratz.github.io/SketchyBar/config/items
-
 default=(
   padding_left=5
   padding_right=5
   icon.font="JetBrainsMono Nerd Font:Bold:17.0"
   label.font="JetBrainsMono Nerd Font:Bold:14.0"
-  background.color=0x2032232b   # SumiInk1 with transparency
+  background.color=0x203c3836   # bg1 with transparency
   background.corner_radius=5
   background.height=25
-  icon.color=0xff7e9cd8         # WaveBlue1
-  label.color=0xffdcd7ba        # FujiWhite
+  icon.color=0xff83a598         # blue
+  label.color=0xffebdbb2        # fg
   icon.padding_left=4
   icon.padding_right=4
   label.padding_left=4
@@ -36,14 +21,9 @@ default=(
 )
 sketchybar --default "${default[@]}"
 
-##### Adding Mission Control Space Indicators #####
-# Let's add some mission control spaces:
-# https://felixkratz.github.io/SketchyBar/config/components#space----associate-mission-control-spaces-with-an-item
-# to indicate active and available mission control spaces.
-
+##### Spaces #####
 sketchybar --add item applelogo left \
-           --set applelogo label= background.color=0x00000000 \
-
+           --set applelogo label= background.color=0x00000000
 
 SPACE_ICONS=("1" "2" "3" "4" "5" "6" "7" "8" "9" "10")
 for i in "${!SPACE_ICONS[@]}"
@@ -54,7 +34,7 @@ do
     icon="${SPACE_ICONS[i]}"
     icon.padding_left=7
     icon.padding_right=7
-    background.border_color=0x80D27E99
+    background.border_color=0x80fe8019 # orange border
     background.border_width=1
     label.drawing=off
     script="$PLUGIN_DIR/space.sh"
@@ -63,38 +43,25 @@ do
   sketchybar --add space space."$sid" left --set space."$sid" "${space[@]}"
 done
 
-##### Adding Left Items #####
-# We add some regular items to the left side of the bar, where
-# only the properties deviating from the current defaults need to be set
-
+##### Left Items #####
 sketchybar --add item chevron left \
            --add item front_app left \
-           --set chevron icon= label.drawing=off background.color=0x0016161D icon.color=0xffD27E99 \
-           --set applelogo label= background.color=0x0016161D icon.color=0xffC34043 \
-           --set front_app icon.drawing=off background.color=0x0016161D icon.color=0xff7FB4CA \
+           --set chevron icon= label.drawing=off background.color=0x003c3836 icon.color=0xfffe8019 \
+           --set applelogo label= background.color=0x003c3836 icon.color=0xfffb4934 \
+           --set front_app icon.drawing=off background.color=0x003c3836 icon.color=0xff83a598 \
            --subscribe front_app front_app_switched \
            --add item bluetooth left \
            --set bluetooth update_freq=1 script="$PLUGIN_DIR/bluetooth.sh" \
            --subscribe bluetooth mouse.clicked
 
-##### Adding Right Items #####
-# In the same way as the left items we can add items to the right side.
-# Additional position (e.g. center) are available, see:
-# https://felixkratz.github.io/SketchyBar/config/items#adding-items-to-sketchybar
-
-# Some items refresh on a fixed cycle, e.g. the clock runs its script once
-# every 10s. Other items respond to events they subscribe to, e.g. the
-# volume.sh script is only executed once an actual change in system audio
-# volume is registered. More info about the event system can be found here:
-# https://felixkratz.github.io/SketchyBar/config/events
-
+##### Right Items #####
 sketchybar --add item clock right \
-           --set clock update_freq=1 icon=  icon.color=0xff7FB4CA label.color=0xffDCD7BA script="$PLUGIN_DIR/clock.sh" \
+           --set clock update_freq=1 icon=  icon.color=0xff83a598 label.color=0xffebdbb2 script="$PLUGIN_DIR/clock.sh" \
            --add item volume right \
-           --set volume icon.color=0xffD27E99 script="$PLUGIN_DIR/volume.sh" \
+           --set volume icon.color=0xfffb4934 script="$PLUGIN_DIR/volume.sh" \
            --subscribe volume volume_change \
            --add item battery right \
-           --set battery icon.color=0xff98BB6C update_freq=120 script="$PLUGIN_DIR/battery.sh" \
+           --set battery icon.color=0xffb8bb26 update_freq=120 script="$PLUGIN_DIR/battery.sh" \
            --subscribe battery system_woke power_source_change
 
 SPOTIFY_EVENT="com.spotify.client.PlaybackStateChanged"
@@ -128,21 +95,21 @@ sketchybar --add       event           spotify_change $SPOTIFY_EVENT      \
                                                                           \
            --add       item            spotify.shuffle popup.spotify.name \
            --set       spotify.shuffle icon=􀊝                             \
-                                       icon.highlight_color=0xff1DB954    \
+                                       icon.highlight_color=0xffb8bb26    \
                                        label.drawing=on                  \
                                        script="$PLUGIN_DIR/spotify.sh"    \
            --subscribe spotify.shuffle mouse.clicked                      \
                                                                           \
            --add       item            spotify.repeat popup.spotify.name  \
            --set       spotify.repeat  icon=􀊞                             \
-                                       icon.highlight_color=0xff1DB954    \
+                                       icon.highlight_color=0xffb8bb26    \
                                        label.drawing=on                  \
                                        script="$PLUGIN_DIR/spotify.sh"    \
-           --set spotify.name icon.drawing=off icon.color=0xffDCD7BA \
-           --set spotify.play icon.highlight_color=0xffD27E99 \
-           --set spotify.repeat icon.highlight_color=0xff98BB6C \
-           --set spotify.shuffle icon.highlight_color=0xff98BB6C \
+           --set spotify.name icon.drawing=off icon.color=0xffebdbb2 \
+           --set spotify.play icon.highlight_color=0xfffabd2f \
+           --set spotify.repeat icon.highlight_color=0xffb8bb26 \
+           --set spotify.shuffle icon.highlight_color=0xffb8bb26 \
            --subscribe spotify.repeat  mouse.clicked
 
-##### Force all scripts to run the first time (never do this in a script) #####
+##### Initial update #####
 sketchybar --update
