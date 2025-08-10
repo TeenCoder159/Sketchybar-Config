@@ -48,7 +48,7 @@ sketchybar --add item chevron left \
            --add item front_app left \
            --set chevron icon= label.drawing=off background.color=0x003c3836 icon.color=0xfffe8019 \
            --set applelogo label= background.color=0x003c3836 icon.color=0xfffb4934 \
-           --set front_app icon.drawing=off background.color=0x003c3836 icon.color=0xff83a598 \
+           --set front_app icon.drawing=off background.color=0x003c3836 icon.color=0xff83a598 script="$PLUGIN_DIR/front_app.sh"\
            --subscribe front_app front_app_switched \
            --add item bluetooth left \
            --set bluetooth update_freq=1 script="$PLUGIN_DIR/bluetooth.sh" \
