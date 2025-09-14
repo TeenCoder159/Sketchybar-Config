@@ -34,7 +34,7 @@ LAVENDER="0xb4befe"        # Lavender
 # Ultra-minimal bar with subtle gradient hint
 sketchybar --bar position=top \
                 height=34 \
-                color=0x15${SUMI_INK_0:2} \
+                color=0x00${SUMI_INK_0:2} \
                 shadow=on \
                 topmost=on \
                 sticky=on \
@@ -65,8 +65,20 @@ default=(
 )
 sketchybar --default "${default[@]}"
 
+##### Apple Logo - Catppuccin Rainbow #####
+sketchybar --add item applelogo left \
+           --set applelogo icon= \
+                          icon.font="JetBrainsMono Nerd Font:Bold:14.0" \
+                          icon.color=0xff${PINK:2} \
+                          background.color=0x18${MAUVE:2} \
+                          background.corner_radius=12 \
+                          background.border_width=1 \
+                          background.border_color=0x40${PINK:2} \
+                          label.drawing=off \
+                          padding_left=10 \
+                          padding_right=10
 ##### Mission Control Spaces - Vibrant Kanagawa #####
-SPACE_ICONS=("壱" "弐" "参" "四" "五" "六" "七" "八" "九" "十")
+SPACE_ICONS=("一" "二" "三" "四" "五" "六" "七" "八" "九" "十")
 SPACE_COLORS=(
   "${PEACH:2}" "${GREEN:2}" "${SKY:2}" "${MAUVE:2}" "${YELLOW:2}"
   "${TEAL:2}" "${PINK:2}" "${LAVENDER:2}" "${SAPPHIRE:2}" "${MAROON:2}"
@@ -166,7 +178,7 @@ sketchybar --add event spotify_change $SPOTIFY_EVENT \
            --add item spotify.name right \
            --set spotify.name icon=󰓇 \
                              icon.color=0xff${GREEN:2} \
-                             label="Spotify" \
+                             label="Umang" \
                              label.color=0xff${ROSEWATER:2} \
                              background.color=0x20${SUMI_INK_2:2} \
                              background.corner_radius=10 \
