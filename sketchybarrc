@@ -24,10 +24,10 @@ default=(
   padding_right=5
   icon.font="JetBrainsMono Nerd Font:Bold:17.0"
   label.font="JetBrainsMono Nerd Font:Bold:14.0"
-  background.color=0x2032232b   # SumiInk1 with transparency
-  background.corner_radius=5
+  background.color=0x4016161d   # SumiInk1 with better transparency
+  background.corner_radius=6
   background.height=25
-  icon.color=0xff7e9cd8         # WaveBlue1
+  icon.color=0xee7e9cd8         # WaveBlue1 with slight opacity
   label.color=0xffdcd7ba        # FujiWhite
   icon.padding_left=4
   icon.padding_right=4
@@ -54,7 +54,7 @@ do
     icon="${SPACE_ICONS[i]}"
     icon.padding_left=7
     icon.padding_right=7
-    background.border_color=0x80D27E99
+    background.border_color=0x99d27e99
     background.border_width=1
     label.drawing=off
     script="$PLUGIN_DIR/space.sh"
@@ -69,9 +69,9 @@ done
 
 sketchybar --add item chevron left \
            --add item front_app left \
-           --set chevron icon= label.drawing=off background.color=0x0016161D icon.color=0xffD27E99 \
-           --set applelogo label= background.color=0x0016161D icon.color=0xffC34043 \
-           --set front_app icon.drawing=off background.color=0x0016161D icon.color=0xff7FB4CA script="$PLUGIN_DIR/front_app.sh"\
+           --set chevron icon= label.drawing=off background.color=0x3016161d icon.color=0xffd27e99 \
+           --set applelogo label= background.color=0x3016161d icon.color=0xffc34043 \
+           --set front_app icon.drawing=off background.color=0x3016161d icon.color=0xff7fb4ca script="$PLUGIN_DIR/front_app.sh"\
            --subscribe front_app front_app_switched \
            --add item bluetooth left \
            --set bluetooth update_freq=1 script="$PLUGIN_DIR/bluetooth.sh" \
@@ -89,12 +89,12 @@ sketchybar --add item chevron left \
 # https://felixkratz.github.io/SketchyBar/config/events
 
 sketchybar --add item clock right \
-           --set clock update_freq=1 icon=  icon.color=0xff7FB4CA label.color=0xffDCD7BA script="$PLUGIN_DIR/clock.sh" \
+           --set clock update_freq=1 icon=  icon.color=0xff7fb4ca label.color=0xffdcd7ba script="$PLUGIN_DIR/clock.sh" \
            --add item volume right \
-           --set volume icon.color=0xffD27E99 script="$PLUGIN_DIR/volume.sh" \
+           --set volume icon.color=0xffd27e99 script="$PLUGIN_DIR/volume.sh" \
            --subscribe volume volume_change \
            --add item battery right \
-           --set battery icon.color=0xff98BB6C update_freq=120 script="$PLUGIN_DIR/battery.sh" \
+           --set battery icon.color=0xff98bb6c update_freq=120 script="$PLUGIN_DIR/battery.sh" \
            --subscribe battery system_woke power_source_change
 
 SPOTIFY_EVENT="com.spotify.client.PlaybackStateChanged"
@@ -105,43 +105,58 @@ sketchybar --add       event           spotify_change $SPOTIFY_EVENT      \
            --set       spotify.name    click_script="$POPUP_SCRIPT"       \
                                        popup.horizontal=on                \
                                        popup.align=center                 \
+                                       popup.background.color=0xee16161d  \
+                                       popup.background.corner_radius=12  \
+                                       popup.background.border_width=2    \
+                                       popup.background.border_color=0x77727169 \
                                        icon.drawing=off                   \
+                                       background.color=0x88363646        \
                                                                           \
            --add       item            spotify.back popup.spotify.name    \
-           --set       spotify.back    icon=􀊎                             \
+           --set       spotify.back    icon="󰒮"                           \
+                                       icon.color=0xff7fb4ca              \
+                                       background.color=0x663c3e51        \
                                        script="$PLUGIN_DIR/spotify.sh"    \
                                        label.drawing=on                  \
            --subscribe spotify.back    mouse.clicked                      \
                                                                           \
            --add       item            spotify.play popup.spotify.name    \
-           --set       spotify.play    icon=􀊔                             \
+           --set       spotify.play    icon="󰐊"                           \
+                                       icon.color=0xff9ece6a              \
+                                       background.color=0x663c3e51        \
                                        updates=on                         \
                                        label.drawing=on                  \
                                        script="$PLUGIN_DIR/spotify.sh"    \
            --subscribe spotify.play    mouse.clicked spotify_change       \
                                                                           \
            --add       item            spotify.next popup.spotify.name    \
-           --set       spotify.next    icon=􀊐                             \
+           --set       spotify.next    icon="󰒭"                           \
+                                       icon.color=0xff7fb4ca              \
+                                       background.color=0x663c3e51        \
                                        label.drawing=on                  \
                                        script="$PLUGIN_DIR/spotify.sh"    \
            --subscribe spotify.next    mouse.clicked                      \
                                                                           \
            --add       item            spotify.shuffle popup.spotify.name \
-           --set       spotify.shuffle icon=􀊝                             \
-                                       icon.highlight_color=0xff1DB954    \
+           --set       spotify.shuffle icon="󰒝"                           \
+                                       icon.color=0xfff7768e              \
+                                       icon.highlight_color=0xff9ece6a    \
+                                       background.color=0x663c3e51        \
                                        label.drawing=on                  \
                                        script="$PLUGIN_DIR/spotify.sh"    \
            --subscribe spotify.shuffle mouse.clicked                      \
                                                                           \
            --add       item            spotify.repeat popup.spotify.name  \
-           --set       spotify.repeat  icon=􀊞                             \
-                                       icon.highlight_color=0xff1DB954    \
+           --set       spotify.repeat  icon="󰑖"                           \
+                                       icon.color=0xfff7768e              \
+                                       icon.highlight_color=0xff73daca    \
+                                       background.color=0x663c3e51        \
                                        label.drawing=on                  \
                                        script="$PLUGIN_DIR/spotify.sh"    \
-           --set spotify.name icon.drawing=off icon.color=0xffDCD7BA \
-           --set spotify.play icon.highlight_color=0xffD27E99 \
-           --set spotify.repeat icon.highlight_color=0xff98BB6C \
-           --set spotify.shuffle icon.highlight_color=0xff98BB6C \
+           --set spotify.name icon.drawing=off icon="󰓇" icon.color=0xff9ece6a label="Spotify" \
+           --set spotify.play icon.highlight_color=0xffd27e99 \
+           --set spotify.repeat icon.highlight_color=0xff73daca \
+           --set spotify.shuffle icon.highlight_color=0xff9ece6a \
            --subscribe spotify.repeat  mouse.clicked
 
 ##### Force all scripts to run the first time (never do this in a script) #####
