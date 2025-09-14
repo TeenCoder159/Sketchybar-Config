@@ -99,16 +99,6 @@ do
 done
 
 ##### Left Items - Dreamy Pastels #####
-sketchybar --add item chevron left \
-           --set chevron icon= \
-                        icon.color=0xff${PEACH:2} \
-                        icon.font="JetBrainsMono Nerd Font:Bold:20.0" \
-                        background.color=0x18${PEACH:2} \
-                        background.corner_radius=6 \
-                        label.drawing=off \
-                        padding_left=6 \
-                        padding_right=6
-
 sketchybar --add item front_app left \
            --set front_app icon.drawing=off \
                           background.color=0x18${TEAL:2} \
@@ -129,6 +119,7 @@ sketchybar --add item bluetooth left \
                           background.border_color=0x40${BLUE:2} \
                           update_freq=5 \
                           script="$PLUGIN_DIR/bluetooth.sh" \
+                          label.drawing=off \
            --subscribe bluetooth mouse.clicked
 
 ##### Right Items - Kanagawa Nature Vibes #####
